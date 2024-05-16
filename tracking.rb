@@ -14,6 +14,7 @@ module Tracking
 
     desc "Send browser visitors to docs"
     get do
+      redirect 'https://manyfold.app'
     end
 
     desc "Get aggregated usage stats"
