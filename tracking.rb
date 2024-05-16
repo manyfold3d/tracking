@@ -15,12 +15,14 @@ module Tracking
         $stats = nil
       end
 
-      def calculate_stats
-        recent = $data.select{ |k,v| v[:time] >= (Date.today - 7) }
-        {
-          instances: recent.size,
-          versions: recent.group_by{ |k,v| v["app"] }.map{|k,v| [k, v.length]}.to_h
-        }
+      def stats
+        $stats ||= begin
+          recent = $data.select{ |k,v| v[:time] >= (Date.today - 7) }
+          {
+            instances: recent.size,
+            versions: recent.group_by{ |k,v| v["app"] }.map{|k,v| [k, v.length]}.to_h
+          }
+        end
       end
     end
 
@@ -43,7 +45,13 @@ module Tracking
 
     desc "Get aggregated usage stats"
     get :stats do
-      $stats ||= calculate_stats
+      stats
     end
+
+    desc "Get a nice badge"
+    get :badge do
+      redirect "https://img.shields.io/badge/instances-#{stats[:instances]}-blue"
+    end
+
   end
 end
