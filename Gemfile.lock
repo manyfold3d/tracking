@@ -55,6 +55,7 @@ GEM
 
 PLATFORMS
   universal-darwin-22
+  x86_64-linux
 
 DEPENDENCIES
   grape (~> 2.0)
