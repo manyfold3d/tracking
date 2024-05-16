@@ -1,6 +1,7 @@
 require 'grape'
 
 $data = {}
+$stats = nil
 
 module Tracking
   class API < Grape::API
@@ -11,6 +12,15 @@ module Tracking
     helpers do
       def store(id, version)
         $data[id] = version.merge(time: DateTime.now)
+        $stats = nil
+      end
+
+      def calculate_stats
+        recent = $data.select{ |k,v| v[:time] >= (Date.today - 7) }
+        {
+          instances: recent.size,
+          versions: recent.group_by{ |k,v| v["app"] }.map{|k,v| [k, v.length]}.to_h
+        }
       end
     end
 
@@ -33,11 +43,7 @@ module Tracking
 
     desc "Get aggregated usage stats"
     get :stats do
-      recent = $data.select{ |k,v| v[:time] >= (Date.today - 7) }
-      {
-        instances: recent.size,
-        versions: recent.group_by{ |k,v| v["app"] }.map{|k,v| [k, v.length]}.to_h
-      }
+      $stats ||= calculate_stats
     end
   end
 end
