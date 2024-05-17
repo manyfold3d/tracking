@@ -40,7 +40,7 @@ module Tracking
 
     desc "Send browser visitors to docs"
     get do
-      redirect 'https://manyfold.app'
+      redirect 'https://manyfold.app/sysadmin/tracking.html'
     end
 
     desc "Get aggregated usage stats"
