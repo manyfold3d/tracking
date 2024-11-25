@@ -20,7 +20,9 @@ module Tracking
           recent = $data.select{ |k,v| v[:time] >= (Date.today - 7) }
           {
             instances: recent.size,
-            versions: recent.group_by{ |k,v| v["app"] }.map{|k,v| [k, v.length]}.to_h
+            versions: recent.group_by{ |k,v| v["app"] }.map{|k,v| [k, v.length]}.to_h,
+            images: recent.group_by{ |k,v| v["image"] }.map{|k,v| [k, v.length]}.to_h,
+            architectures: recent.group_by{ |k,v| v["arch"] }.map{|k,v| [k, v.length]}.to_h
           }
         end
       end
